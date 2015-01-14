@@ -9,16 +9,17 @@
 
 namespace Calculator;
 
-use Zend\Mvc\ModuleRouteListener;
+use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\Mvc\MvcEvent;
 
-class Module
+class Module implements AutoloaderProviderInterface
 {
     public function onBootstrap(MvcEvent $e)
     {
-        $eventManager        = $e->getApplication()->getEventManager();
-        $moduleRouteListener = new ModuleRouteListener();
-        $moduleRouteListener->attach($eventManager);
+        $sm = $e->getApplication()->getServiceManager();
+        $config = $sm->get('config');
+        $layout = $e->getViewModel();
+        $layout->setVariable('title', $config['application']['name']);
     }
 
     public function getConfig()
